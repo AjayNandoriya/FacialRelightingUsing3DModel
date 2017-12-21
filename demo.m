@@ -2,8 +2,12 @@
 source_fname = 'ss1.PNG';
 ref_fname = 'ref6.PNG';
 
-addpath('../3DMM_edges-master');
-load('01_MorphableModel.mat');
+% Path to 3DMM_edge Repo folder
+addpath(genpath('../3DMM_edges'));
+
+
+% Load model files
+load('01_MorphableModel.mat');  
 texMU = double(texMU)/255;
 texPC = double(texPC)/255;
 
@@ -35,7 +39,7 @@ H(3:3:end,1:9)=0;
 %% Generate Relighted Image 
 
 tex_val = texPC(:,1:size(source.texb,1))*source.texb+texMU;
-beta_i = tex_val.*H;
+beta_i = repmat(tex_val,1,size(H,2)).*H;
 Ir = reshape(beta_i*source.L,3,size(texPC,1)/3)';
 Ir(Ir<0)=0;
 FV.facevertexcdata = Ir;
@@ -43,7 +47,7 @@ Ir_src = renderFace(FV,source_img,FV.R,FV.t,FV.s,true);
 
 
 tex_val = texPC(:,1:size(source.texb,1))*source.texb+texMU;
-beta_i = tex_val.*H;
+beta_i = repmat(tex_val,1,size(H,2)).*H;
 Ir = reshape(beta_i*ref.L,3,size(texPC,1)/3)';
 Ir(Ir<0)=0;
 FV.facevertexcdata = Ir;
